@@ -3,6 +3,8 @@ import os
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import filedialog as fd
 
 def edgeDetection(img, gray, coloring_page):
     #changin
@@ -23,7 +25,7 @@ def edgeDetection(img, gray, coloring_page):
 
     file_name = coloring_page + ".jpg"
 
-    #status = cv2.imwrite('/home/lyleolsen/Pictures/coloring_pages/' + file_name, reversed)
+    status = cv2.imwrite('/home/lyle/Pictures/coloring_pages/' + file_name, reversed)
 
     #print("Image written to file-system : ",status)
     cv2.waitKey()
@@ -56,24 +58,26 @@ def flatten_image(img):
 
 
 def process():
+
+    imageLocation = fd.askopenfilename()
     #file to get
-    img = cv2.imread("/home/lyleolsen/Pictures/villians.jpg", cv2.IMREAD_COLOR)
+    # "/home/lyle/Pictures/spidey2.jpg"
+    img = cv2.imread(imageLocation, cv2.IMREAD_COLOR)
     grayIMage = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     laplacian_img = cv2.Laplacian(grayIMage,cv2.CV_64F)
     sobelx = cv2.Sobel(grayIMage,cv2.CV_64F,1,0,ksize=5)
     sobely = cv2.Sobel(grayIMage,cv2.CV_64F,0,1,ksize=5)
 
-    #just messing around
-    #flatten_image(img)
-    
 
     #name of the file in the coloring_page folder
-    coloringPage = "villians"
+    image_location_split = imageLocation.split("/")
+    len_array = len(image_location_split)
+    file_name = image_location_split[len_array -1]
+    file_name_split = file_name.split('.')
+    save_file_name = file_name_split[0]
+
+    coloringPage = save_file_name
     edgeDetection(img, grayIMage, coloringPage)
 
-    # cv2.imshow("laplacian",laplacian_img)
-    # cv2.imshow("sobelx",sobelx)
-    # cv2.imshow("sobely",sobely)
-    # cv2.waitKey()
 
 process()
